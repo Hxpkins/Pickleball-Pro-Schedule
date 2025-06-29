@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8' />
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+  <title>Pickleball Pro Calendar</title>
+  <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css' rel='stylesheet' />
+  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      padding: 0;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    #calendar {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 6px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .legend {
+      max-width: 900px;
+      margin: 20px auto;
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .legend-color {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>July Pickleball Schedule</h1>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-color" style="background-color:#28a745;"></div>All Levels</div>
+    <div class="legend-item"><div class="legend-color" style="background-color:#007bff;"></div>Beginner</div>
+    <div class="legend-item"><div class="legend-color" style="background-color:#ffc107;"></div>Intermediate</div>
+    <div class="legend-item"><div class="legend-color" style="background-color:#fd7e14;"></div>Intermediate–Advanced</div>
+  </div>
+  <div id='calendar'></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const DESCRIPTIONS = {
+        'Open Play': 'Casual drop-in session open to all levels. Courts rotate every game so everyone gets a chance to mix, play, and meet new partners.',
+        'Road to 4.0 Series': 'A progressive training program designed for intermediate players looking to break into the next level. Each week builds on the last with a focus on consistency, strategy, and smart shot selection.',
+        'Serve & Return Mastery': 'Hone two of the most critical shots in the game. This clinic focuses on precision, spin, and tactical depth for both serves and returns to help you take control from the first shot.',
+        'Intro to Pickleball with the Pro': 'Perfect for beginners or those looking to brush up on the basics. Learn rules, scoring, court positioning, and essential techniques in a welcoming, low-pressure environment.',
+        'Dinking Domination': 'Learn how to control the net with soft hands and smart movement. This clinic covers dinks, angles, and footwork to help you win more points at the kitchen line.',
+        'Kitchen Play & Resets': 'A technical session on how to neutralize aggressive shots and take control of the kitchen. Focuses on resets, soft blocks, and staying balanced under pressure.',
+        'Drives & Passing Shots': 'A high-energy clinic on how to drive through the ball and pass opponents with precision. Covers timing, targeting, and attacking from mid-court and baseline.',
+        'King of the Court': 'Competitive and fast-paced. Players rotate through challenge courts where winners stay and challengers advance to dethrone them. Great for all levels looking to battle and have fun.',
+        'Play with the Pro + Beers After': 'Play rotating doubles alongside the Pro in a relaxed and fun setting. Stay after to unwind with a drink and connect with the community.',
+        'Theme Round Robin': 'Social round robin with a twist — show up in theme (like retro gear or team colors) and play timed rounds with new partners each game.',
+        'Tournament Saturday': 'A more competitive format for those looking to put their skills to the test. Formats vary (round robin, bracket play, etc.) with scorekeeping, prizes, and bragging rights on the line.',
+        'Coached Gameplay': 'Live matches with real-time coaching and feedback. Play out points while the pro provides tips, strategy adjustments, and personalized insight to improve your game.',
+        'Pickleball Minigames': 'Fun, creative challenges designed to build fast reactions, footwork, and teamwork. Great for all levels — includes games like Around the World, Skinny Singles, and more.'
+      };
+
+      const calendarEl = document.getElementById('calendar');
+      const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        initialDate: '2025-07-01',
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,listWeek'
+        },
+        eventMouseEnter: function(info) {
+          const tooltip = document.createElement('div');
+          tooltip.className = 'fc-tooltip';
+          tooltip.style.position = 'absolute';
+          tooltip.style.zIndex = '10001';
+          tooltip.style.background = '#333';
+          tooltip.style.color = '#fff';
+          tooltip.style.padding = '5px 10px';
+          tooltip.style.borderRadius = '4px';
+          tooltip.innerText = info.event.title + (info.event.extendedProps.description ? ("\n" + info.event.extendedProps.description) : "");
+          document.body.appendChild(tooltip);
+          info.el._tooltip = tooltip;
+          info.el.addEventListener('mousemove', function(e) {
+            tooltip.style.top = e.pageY + 10 + 'px';
+            tooltip.style.left = e.pageX + 10 + 'px';
+          });
+        },
+        eventMouseLeave: function(info) {
+          if (info.el._tooltip) {
+            document.body.removeChild(info.el._tooltip);
+            info.el._tooltip = null;
+          }
+        },
+        events: []
+      });
+
+      function addEvent(title, date, start, end, color) {
+        calendar.addEvent({
+          title,
+          start: `${date}T${start}`,
+          end: `${date}T${end}`,
+          color,
+          description: DESCRIPTIONS[title] || ''
+        });
+      }
+
+      const schedule = [
+        // Add all 31 days from your approved bullet point schedule here:
+        ['2025-07-01', 'Open Play', '07:00', '09:00', '#28a745'],
+        ['2025-07-01', 'Serve & Return Mastery', '11:00', '13:00', '#ffc107'],
+        ['2025-07-02', 'Open Play', '07:00', '09:00', '#28a745'],
+        ['2025-07-02', 'Intro to Pickleball with the Pro', '09:30', '11:30', '#007bff'],
+        ['2025-07-03', 'Open Play', '07:00', '09:00', '#28a745'],
+        ['2025-07-03', 'King of the Court', '11:00', '13:00', '#28a745'],
+        ['2025-07-04', 'Open Play', '07:00', '09:00', '#28a745'],
+        ['2025-07-04', 'Play with the Pro + Beers After', '17:00', '19:00', '#28a745'],
+        ['2025-07-05', 'Theme Round Robin', '09:30', '11:30', '#28a745'],
+        ['2025-07-06', 'Open Play', '07:00', '09:00', '#28a745'],
+        ['2025-07-07', 'Open Play', '07:00', '09:00', '#28a745'],
+        ['2025-07-07', 'Road to 4.0 Series', '10:00', '12:00', '#ffc107'],
+        ['2025-07-08', 'Open Play', '07:00', '09:00', '#28a745'],
+        ['2025-07-08', 'Dinking Domination', '10:00', '12:00', '#28a745'],
+        ['2025-07-08', 'Coached Gameplay', '14:00', '16:00', '#ffc107'],
+        ['2025-07-09', 'Open Play', '07:00', '09:00', '#28a745'],
+        ['2025-07-09', 'Serve & Return Mastery', '11:00', '13:00', '#ffc107'],
+        ['2025-07-10', 'Open Play', '07:00', '09:00', '#28a745'],
+        ['2025-07-10', 'King of the Court', '11:00', '13:00', '#28a745'],
+        ['2025-07-11', 'Open Play', '07:00', '09:00', '#28a745'],
+        ['2025-07-11', 'Pickleball Minigames', '10:00', '12:00', '#28a745'],
+        ['2025-07-11', 'Play with the Pro + Beers After', '17:00', '19:00', '#28a745'],
+        ['2025-07-12', 'Tournament Saturday', '09:30', '13:30', '#fd7e14'],
+        ['2025-07-13', 'Open Play', '07:00', '09:00', '#28a745'],
+        ['2025-07-14', 'Open Play', '07:00', '09:00', '#28a745'],
+        ['2025-07-14', 'Kitchen Play & Resets', '10:00', '12:00', '#28a745'],
+        ['2025-07-15', 'Open Play', '07:00', '09:00', '#28a745'],
+        ['2025-07-15', 'Dinking Domination', '10:00', '12:00', '#28a745'],
+        ['2025-07-16', 'Open Play', '07:00', '09:00', '#28a745'],
+        ['2025-07-16', 'Drives & Passing Shots', '10:00', '12:00', '#28a745'],
+        ['2025-07-16', 'Coached Gameplay', '14:00', '16:00', '#ffc107'],
+        ['2025-07-17', 'Open Play', '07:00', '09:00', '#28a745'],
+        ['2025-07-17', 'King of the Court', '11:00', '13:00', '#28a745'],
+        ['2025-07-18', 'Open Play', '07:00', '09:00', '#28a745'],
+        ['2025-07-18', 'Play with the Pro + Beers After', '17:00', '19:00', '#28a745'],
+        ['2025-07-19', 'Theme Round Robin', '09:30', '11:30', '#28a745'],
+        ['2025-07-20', 'Open Play', '07:00', '09:00', '#28a745'],
+        ['2025-07-21', 'Open Play', '07:00', '09:00', '#28a745'],
+        ['2025-07-21', 'Road to 4.0 Series', '10:00', '12:00', '#ffc107'],
+        ['2025-07-22', 'Open Play', '07:00', '09:00', '#28a745'],
+        ['2025-07-22', 'Dinking Domination', '10:00', '12:00', '#28a745'],
+        ['2025-07-22', 'Coached Gameplay', '14:00', '16:00', '#ffc107'],
+        ['2025-07-23', 'Open Play', '07:00', '09:00', '#28a745'],
+        ['2025-07-23', 'Intro to Pickleball with the Pro', '09:30', '11:30', '#007bff'],
+        ['2025-07-24', 'Open Play', '07:00', '09:00', '#28a745'],
+        ['2025-07-24', 'King of the Court', '11:00', '13:00', '#28a745'],
+        ['2025-07-25', 'Open Play', '07:00', '09:00', '#28a745'],
+        ['2025-07-25', 'Pickleball Minigames', '10:00', '12:00', '#28a745'],
+        ['2025-07-25', 'Play with the Pro + Beers After', '17:00', '19:00', '#28a745'],
+        ['2025-07-26', 'Tournament Saturday', '09:30', '13:30', '#fd7e14'],
+        ['2025-07-27', 'Open Play', '07:00', '09:00', '#28a745'],
+        ['2025-07-28', 'Open Play', '07:00', '09:00', '#28a745'],
+        ['2025-07-28', 'Serve & Return Mastery', '11:00', '13:00', '#ffc107'],
+        ['2025-07-28', 'Coached Gameplay', '14:00', '16:00', '#ffc107'],
+        ['2025-07-29', 'Open Play', '07:00', '09:00', '#28a745'],
+        ['2025-07-29', 'Dinking Domination', '10:00', '12:00', '#28a745'],
+        ['2025-07-30', 'Open Play', '07:00', '09:00', '#28a745'],
+        ['2025-07-30', 'Kitchen Play & Resets', '10:00', '12:00', '#28a745'],
+        ['2025-07-31]()
