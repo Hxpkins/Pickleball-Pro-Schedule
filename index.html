@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>July Pickleball Schedule</title>
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 40px 0;
+      background: #f9f9f9;
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 0;
+    }
+    #legend {
+      margin: 20px auto 30px;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      font-size: 14px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .dot {
+      height: 12px;
+      width: 12px;
+      border-radius: 50%;
+    }
+    .all-levels { background-color: #28a745; }
+    .beginner { background-color: #007bff; }
+    .intermediate { background-color: #ffc107; }
+    .adv { background-color: #fd7e14; }
+    #calendar {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <h1>July Pickleball Schedule</h1>
+  <div id="legend">
+    <div class="legend-item"><span class="dot all-levels"></span> All Levels</div>
+    <div class="legend-item"><span class="dot beginner"></span> Beginner</div>
+    <div class="legend-item"><span class="dot intermediate"></span> Intermediate</div>
+    <div class="legend-item"><span class="dot adv"></span> Intermediate–Advanced</div>
+  </div>
+  <div id="calendar"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const calendarEl = document.getElementById('calendar');
+
+      const descriptions = {
+        "Open Play": "Drop-in play open to all levels. No instruction—just come and play!",
+        "Intro to Pickleball with the Pro": "Perfect for beginners or those looking to brush up on the basics. Learn rules, scoring, court positioning, and essential techniques in a welcoming environment.",
+        "Serve & Return Clinic": "Master the fundamentals of serving and returning with a focus on consistency and placement.",
+        "Dinking, Kitchen Play & Resets": "Focus on control and patience at the net. Learn to reset points and win with smart play.",
+        "King of the Court": "Competitive rotation-based format. Winners stay on. Great for intermediate to advanced players!",
+        "Coached Gameplay": "Live-play coaching. You’ll receive feedback on positioning, shot selection, and strategy.",
+        "Play with the Pro + Beers After": "Join the pro for a fun, social session—followed by refreshments and conversation!",
+        "Pickleball Mini-Games": "Fun drills and point-based challenges. Win prizes and improve your game in a playful format.",
+        "Drives & Passing Shots": "Work on aggressive baseline play, driving through the ball, and hitting around opponents.",
+        "Tournament Day": "Competitive mini-tournaments with brackets and prizes. Open to all unless otherwise noted.",
+        "Road to 4.0/4.5/5.0": "Progressive series designed for consistent improvement through weekly training. Commitment required."
+      };
+
+      const events = [];
+
+      // Helper to add event
+      const add = (title, date, start, end, color, desc) => {
+        events.push({
+          title,
+          start: `${date}T${start}`,
+          end: `${date}T${end}`,
+          color,
+          extendedProps: { description: desc }
+        });
+      };
+
+      const daysInJuly = Array.from({ length: 31 }, (_, i) => `2025-07-${String(i + 1).padStart(2, '0')}`);
+
+      daysInJuly.forEach((day, i) => {
+        const dow = new Date(day).getDay();
+
+        // Sundays: Open Play only
+        if (dow === 0) {
+          add("Open Play", day, "07:00", "09:00", "#28a745", descriptions["Open Play"]);
+        }
+
+        // Saturdays: Tournaments only
+        else if (dow === 6) {
+          add("Tournament Day", day, "08:00", "12:00", "#28a745", descriptions["Tournament Day"]);
+        }
+
+        // Weekdays
+        else {
+          add("Open Play", day, "07:00", "09:00", "#28a745", descriptions["Open Play"]);
+
+          switch (i) {
+            case 0: // July 1
+              add("Serve & Return Clinic", day, "11:00", "13:00", "#ffc107", descriptions["Serve & Return Clinic"]);
+              break;
+            case 1: // July 2
+              add("Intro to Pickleball with the Pro", day, "09:30", "11:30", "#007bff", descriptions["Intro to Pickleball with the Pro"]);
+              break;
+            case 2: // July 3
+            case 9: // July 10
+            case 16: // July 17
+            case 23: // July 24
+            case 30: // July 31
+              add("King of the Court", day, "11:00", "13:00", "#fd7e14", descriptions["King of the Court"]);
+              break;
+            case 7:  // July 8
+            case 15: // July 16
+              add("Drives & Passing Shots", day, "11:00", "13:00", "#fd7e14", descriptions["Drives & Passing Shots"]);
+              break;
+            case 10: // July 11
+            case 24: // July 25
+              add("Pickleball Mini-Games", day, "12:00", "14:00", "#28a745", descriptions["Pickleball Mini-Games"]);
+              break;
+            case 13: // July 14
+            case 19: // July 20
+              add("Dinking, Kitchen Play & Resets", day, "11:00", "13:00", "#ffc107", descriptions["Dinking, Kitchen Play & Resets"]);
+              break;
+            case 6:  // July 7
+            case 21: // July 22
+            case 27: // July 28
+              add("Coached Gameplay", day, "17:00", "19:00", "#ffc107", descriptions["Coached Gameplay"]);
+              break;
+            case 4: // July 5 (Sat)
+            case 11: // July 12 (Sat)
+            case 18: // July 19 (Sat)
+            case 25: // July 26 (Sat)
+              break; // already handled in Saturday block
+            default:
+              add("Road to 4.0+", day, "17:00", "19:00", "#fd7e14", descriptions["Road to 4.0/4.5/5.0"]);
+              break;
+          }
+
+          // Fridays get Play with the Pro + Beers
+          if (dow === 5) {
+            add("Play with the Pro + Beers After", day, "17:00", "19:00", "#28a745", descriptions["Play with the Pro + Beers After"]);
+          }
+        }
+      });
+
+      const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        initialDate: '2025-07-01',
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,listMonth'
+        },
+        events,
+        eventDidMount: function(info) {
+          if (info.event.extendedProps.description) {
+            const tooltip = document.createElement('div');
+            tooltip.innerText = info.event.extendedProps.description;
+            tooltip.style.cssText = `
+              position: absolute;
+              background: rgba(0,0,0,0.75);
+              color: #fff;
+              padding: 8px 10px;
+              border-radius: 5px;
+              font-size: 12px;
+              max-width: 200px;
+              z-index: 1000;
+              pointer-events: none;
+              opacity: 0;
+              transition: opacity 0.2s;
+            `;
+            document.body.appendChild(tooltip);
+
+            info.el.addEventListener('mouseenter', function(e) {
+              tooltip.style.left = e.pageX + 'px';
+              tooltip.style.top = (e.pageY + 10) + 'px';
+              tooltip.style.opacity = 1;
+            });
+
+            info.el.addEventListener('mousemove', function(e) {
+              tooltip.style.left = e.pageX + 'px';
+              tooltip.style.top = (e.pageY + 10) + 'px';
+            });
+
+            info.el.addEventListener('mouseleave', function() {
+              tooltip.style.opacity = 0;
+            });
+          }
+        }
+      });
+
+      calendar.render();
+    });
+  </script>
+</body>
+</html>
